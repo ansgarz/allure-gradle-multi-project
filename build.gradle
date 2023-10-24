@@ -1,46 +1,69 @@
-description = 'Allure Gradle Multi Module'
+// see also https://github.com/allure-examples/allure-junit5-gradle/blob/master/build.gradle
+// and https://github.com/allure-framework/allure-gradle
 
-buildscript {
-    repositories {
-        maven { url 'http://repo.spring.io/plugins-release' }
-        maven { url 'https://plugins.gradle.org/m2/' }
-    }
-
-    dependencies {
-        classpath "io.qameta.allure:allure-gradle:2.8.1"
-    }
+plugins {
+    id 'java'
+    id 'maven'
+    id 'io.qameta.allure' version '2.11.2'
+//    id "io.qameta.allure-aggregate-report" version "2.11.2"
 }
+
+def allureVersion = "2.13.6"
+def junit5Version = "5.6.2"
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+ext {
+    junitJupiterVersion = '5.8.2'
+}
+
 
 allprojects {
-    group = 'org.example'
-    version = version
-
-}
-
-
-subprojects {
-    apply plugin: 'java'
-    apply plugin: 'io.qameta.allure'
-
-    sourceCompatibility = 1.8
-
-    allure {
-        autoconfigure = true
-        version = '2.13.1'
-        useTestNG {
-            version = '2.13.1'
-        }
-
-    }
 
     repositories {
         mavenCentral()
     }
 
+    group = 'org.example'
+    version = version
+
+    apply plugin: 'java-library'
+
+    // for creating test reports
+    apply plugin: 'io.qameta.allure'
+
+    sourceCompatibility = 11
+    targetCompatibility = 11
+
     dependencies {
-        compile 'io.qameta.allure:allure-testng:2.13.1'
-        testCompile 'org.testng:testng:6.14.3'
+        testImplementation("io.qameta.allure:allure-java-commons:$allureVersion")
+
+        testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
+        testImplementation("org.junit.jupiter:junit-jupiter-engine:$junit5Version")
+        testImplementation("org.junit.jupiter:junit-jupiter-params:$junit5Version")
     }
 
+    test {
+        useJUnitPlatform()
+    }
+
+    allure {
+        autoconfigure = true
+        aspectjweaver = true
+        version = allureVersion
+
+        useJUnit5 {
+            version = allureVersion
+        }
+    }
 }
 
+subprojects {
+    allure {
+        adapter {
+            frameworks {
+                junit5
+            }
+        }
+    }
+}
