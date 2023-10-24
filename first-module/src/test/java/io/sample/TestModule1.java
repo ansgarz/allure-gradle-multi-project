@@ -1,9 +1,9 @@
-package io.eroshenkoam.sample;
+package io.sample;
 
-import io.eroshenkoam.allure.BaseSteps;
+import io.allure.BaseSteps;
 import org.testng.annotations.Test;
 
-public class SimpleTest {
+public class TestModule1 {
 
     private BaseSteps steps = new BaseSteps();
 
