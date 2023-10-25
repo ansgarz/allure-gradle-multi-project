@@ -1,48 +1,22 @@
-// see also https://github.com/allure-examples/allure-junit5-gradle/blob/master/build.gradle
-// and https://github.com/allure-framework/allure-gradle
-
-import io.qameta.allure.gradle.task.AllureReport
-
-buildscript {
-    repositories {
-        mavenCentral()
-//        maven {
-//            url "${artifactory_contextUrl}/${artifactory_plugins_repo}"
-//            credentials {
-//                username = "${artifactory_user}"
-//                password = "${artifactory_password}"
-//            }
-//        }
-    }
-
-    dependencies {
-        classpath 'io.qameta.allure:allure-gradle:2.8.1'
-        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.27.1'
-    }
-}
-
 plugins {
-    id 'java'
-    id 'maven'
-    id 'io.qameta.allure' version '2.8.1'
-//    id "io.qameta.allure-aggregate-report" version "2.11.2"
+    id 'java-library'
+    id "io.qameta.allure-aggregate-report" version "2.11.2"
+    id "io.qameta.allure-adapter" version "2.11.2" apply false  // only required for subprojects
 }
 
-repositories {
-    // Repository is needed for downloading allure-commandline for building the report
-    mavenCentral()
-}
 
 ext {
     allureVersion = "2.17.3"
-    junit5Version = "5.6.2"
+    junit5Version = "5.8.2"
 }
+
 
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
-ext {
-    junitJupiterVersion = '5.8.2'
-}
+
+
+group = 'org.example'
+version = version
 
 
 allprojects {
@@ -51,13 +25,7 @@ allprojects {
         mavenCentral()
     }
 
-    group = 'org.example'
-    version = version
-
     apply plugin: 'java-library'
-
-    // for creating test reports
-    apply plugin: 'io.qameta.allure'
 
     sourceCompatibility = 11
     targetCompatibility = 11
@@ -73,29 +41,5 @@ allprojects {
     test {
         useJUnitPlatform()
     }
-
-    allure {
-        autoconfigure = true
-//        aspectjweaver = true
-        version = allureVersion
-
-        useJUnit5 {
-            version = allureVersion
-        }
-    }
 }
 
-task allureAggregatedReport(type: AllureReport) {
-    resultsDirs = subprojects.allure.resultsDir
-}
-
-//
-//subprojects {
-//    allure {
-//        adapter {
-//            frameworks {
-//                junit5
-//            }
-//        }
-//    }
-//}

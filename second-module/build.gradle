@@ -1,1 +1,12 @@
+// Each submodule
+plugins {
+    id("io.qameta.allure-adapter")
+}
 
+allure {
+    adapter {
+        frameworks {
+            junit5
+        }
+    }
+}
