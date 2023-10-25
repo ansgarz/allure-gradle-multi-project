@@ -1,8 +1,0 @@
-
-allure {
-    adapter {
-        frameworks {
-            junit5
-        }
-    }
-}
