@@ -43,3 +43,16 @@ allprojects {
     }
 }
 
+subprojects {
+    // Each submodule
+    apply plugin: "io.qameta.allure-adapter"
+
+    allure {
+        adapter {
+            frameworks {
+                junit5
+            }
+        }
+    }
+}
+
